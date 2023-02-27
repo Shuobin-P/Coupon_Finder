@@ -28,6 +28,10 @@ public class ResultVO {
         this.data = data;
     }
 
+    public static ResultVO getInstance(String message, Object data) {
+        return new ResultVO(200, message, data);
+    }
+
     public static ResultVO getInstance(Integer code, String message, Object data) {
         return new ResultVO(code, message, data);
     }

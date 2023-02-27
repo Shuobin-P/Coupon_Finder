@@ -1,4 +1,4 @@
-package com.google.couponfinder.security.security;
+package com.google.couponfinder.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/test/get", "/js/**", "/images/**").permitAll()
+                .antMatchers("/coupon/**", "/js/**", "/images/**").permitAll()
                 .anyRequest().authenticated();
     }
 
