@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.google.couponfinder.mapper.CouponMapper">
+    <resultMap id="mainMap" type="Coupon">
+        <result property="id" column="id"></result>
+        <result property="title" column="title"></result>
+        <result property="status" column="status"></result>
+        <result property="pictureUrl" column="picture_url"></result>
+        <result property="description" column="description"></result>
+        <result property="totalQuantity" column="total_quantity"></result>
+        <result property="usedQuantity" column="used_quantity"></result>
+        <result property="originalPrice" column="original_price"></result>
+        <result property="presentPrice" column="present_price"></result>
+
+    </resultMap>
+    <select id="getHotCoupons" resultMap="mainMap">
+        SELECT *
+        FROM coupon
+        WHERE category_id = 2
+        ORDER BY used_quantity DESC
+    </select>
+</mapper>
