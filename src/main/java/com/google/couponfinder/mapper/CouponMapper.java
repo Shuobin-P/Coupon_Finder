@@ -4,6 +4,8 @@ import com.github.pagehelper.Page;
 import com.google.couponfinder.entity.Coupon;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * @author W&F
  * @version 1.0
@@ -17,4 +19,8 @@ public interface CouponMapper {
      * @return
      */
     Page<Coupon> getHotCoupons();
+
+    Coupon getCouponInfo(Long id);
+
+    List<String> getCouponDetailImages(Long id);
 }
