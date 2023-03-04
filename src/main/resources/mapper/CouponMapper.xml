@@ -21,4 +21,16 @@
         WHERE category_id = 2
         ORDER BY used_quantity DESC
     </select>
+
+    <select id="getCouponInfo" resultType="Coupon" parameterType="Long">
+        SELECT *
+        FROM coupon
+        WHERE id = #{id}
+    </select>
+
+    <select id="getCouponDetailImages" resultType="String" parameterType="Long">
+        SELECT img_url
+        FROM goods_detail_image
+        WHERE coupon_id = #{id}
+    </select>
 </mapper>
