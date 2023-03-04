@@ -1,6 +1,7 @@
 package com.google.couponfinder.service;
 
 import com.github.pagehelper.Page;
+import com.google.couponfinder.dto.CouponDetailDTO;
 import com.google.couponfinder.entity.Coupon;
 import org.springframework.stereotype.Service;
 
@@ -17,4 +18,11 @@ public interface CouponService {
      * @return
      */
     Page<Coupon> getHotCoupons();
+
+    /**
+     * 获得优惠券详细信息
+     *
+     * @return
+     */
+    CouponDetailDTO getCouponDetail(Long id);
 }

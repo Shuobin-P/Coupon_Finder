@@ -7,10 +7,7 @@ import com.google.couponfinder.service.CouponService;
 import com.google.couponfinder.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author W&F
@@ -37,9 +34,17 @@ public class CouponController {
     @GetMapping("/getHotCoupons")
     public ResultVO getHotCoupons(@RequestParam Integer pageNum, Integer pageSize) {
         //可以参考个人运动管理平台SportNewsController写法
-        //FIXME 要实现分页查询，就是先把所有数据查出来放在Page中，讲实话，把所有数据拿出来存储在Page里面，如果数据量很大，
+        //FIXME 要实现分页查询，就是先把所有数据查出来放在Page中，讲实话，把所有数据拿出来存储在Page里面，如果数据量很大，会出现问题吧。
         PageHelper.startPage(pageNum, pageSize);
         Page<Coupon> page = couponService.getHotCoupons();
         return ResultVO.getInstance("成功获得使用数量最多的优惠券相关信息", page);
     }
+
+
+    @GetMapping("/getCouponInfo/{id}")
+    public ResultVO getCouponInfo(@PathVariable Long id) {
+        return ResultVO.getInstance("成功获得优惠券详细信息", couponService.getCouponDetail(id));
+    }
+
+
 }
