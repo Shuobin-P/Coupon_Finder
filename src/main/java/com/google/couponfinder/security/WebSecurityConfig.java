@@ -21,8 +21,10 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //不禁用的话，微信小程序调用/login接口就会出现问题。
+        http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/coupon/**", "/js/**", "/images/**").permitAll()
+                .antMatchers("/coupon/**", "/js/**", "/images/**", "/login").permitAll()
                 .anyRequest().authenticated();
     }
 

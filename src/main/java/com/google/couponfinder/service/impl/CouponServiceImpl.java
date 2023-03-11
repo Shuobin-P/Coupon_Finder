@@ -37,6 +37,7 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public CouponDetailDTO getCouponDetail(Long id) {
         Coupon coupon = couponMapper.getCouponInfo(id);
+        log.info("优惠券详细信息" + coupon);
         List<String> images = couponMapper.getCouponDetailImages(id);
         CouponDetailDTO detailDTO = new CouponDetailDTO();
         BeanUtils.copyProperties(coupon, detailDTO);

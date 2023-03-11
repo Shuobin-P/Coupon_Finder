@@ -9,3 +9,13 @@ spring:
 mybatis:
   mapper-locations: mapper/*.xml
   type-aliases-package: com.google.couponfinder.entity
+
+mini:
+  appid: wxfb9f6a157d4f2458
+  appsecret: 37a056dbf465b9ed3b202c998722feec
+
+jwt:
+  tokenHeader: Authorization
+  tokenHead: 'Bearer '
+  secret: bingbingbing
+  expiration: 1800000

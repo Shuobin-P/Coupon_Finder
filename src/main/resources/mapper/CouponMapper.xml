@@ -22,7 +22,7 @@
         ORDER BY used_quantity DESC
     </select>
 
-    <select id="getCouponInfo" resultType="Coupon" parameterType="Long">
+    <select id="getCouponInfo" resultMap="mainMap" parameterType="Long">
         SELECT *
         FROM coupon
         WHERE id = #{id}

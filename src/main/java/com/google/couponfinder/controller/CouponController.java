@@ -40,11 +40,16 @@ public class CouponController {
         return ResultVO.getInstance("成功获得使用数量最多的优惠券相关信息", page);
     }
 
-
-    @GetMapping("/getCouponInfo/{id}")
-    public ResultVO getCouponInfo(@PathVariable Long id) {
+    @GetMapping("/getCouponInfo")
+    public ResultVO getCouponInfo(@RequestParam Long id) {
         return ResultVO.getInstance("成功获得优惠券详细信息", couponService.getCouponDetail(id));
     }
 
+    @GetMapping("/getCoupon")
+    public ResultVO getCoupon(@RequestParam Long couponId) {
+        //因为领券的话，是需要把券存储到不同的用户账号对应的卡包中，这个地方好像涉及到并发的问题？
+        //先检查数据库中的数量是否>=1，如果是的话，就-1，并把该优惠券存入该用户的卡包中
+        return null;
+    }
 
 }
