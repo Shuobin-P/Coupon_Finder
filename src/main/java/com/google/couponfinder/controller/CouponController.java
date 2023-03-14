@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/coupon")
 public class CouponController {
 
-    private CouponService couponService;
+    private final CouponService couponService;
 
     @Autowired
     public CouponController(CouponService couponService) {
