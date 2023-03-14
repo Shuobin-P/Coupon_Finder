@@ -19,14 +19,19 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    //TODO SpringSecurity提供的东西太多了，身份认证就简实现吧。按照自己的思路，但是鉴权如何做？鉴权只要处理web(HttpSecurity http)，
+    //身份认证完全之后，Authentication对象中应该保存了authorities
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //不禁用的话，微信小程序调用/login接口就会出现问题。
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/coupon/**", "/js/**", "/images/**", "/login").permitAll()
+                .antMatchers("/coupon/**", "/js/**", "/images/**", "/login","/wallet/**").permitAll()
                 .anyRequest().authenticated();
     }
+
+
 
     @Bean
     @Override

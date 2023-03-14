@@ -1,6 +1,7 @@
 package com.google.couponfinder.mapper;
 
 import com.github.pagehelper.Page;
+import com.google.couponfinder.dto.WalletCouponDTO;
 import com.google.couponfinder.entity.Coupon;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -23,4 +24,6 @@ public interface CouponMapper {
     Coupon getCouponInfo(Long id);
 
     List<String> getCouponDetailImages(Long id);
+
+    Page<WalletCouponDTO> getAvailableCoupons(String open_id);
 }
