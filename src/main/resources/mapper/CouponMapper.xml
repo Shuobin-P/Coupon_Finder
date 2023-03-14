@@ -13,8 +13,14 @@
         <result property="usedQuantity" column="used_quantity"></result>
         <result property="originalPrice" column="original_price"></result>
         <result property="presentPrice" column="present_price"></result>
-
     </resultMap>
+
+    <resultMap id="walletCouponDTOMap" type="WalletCouponDTO">
+        <result property="title" column="title"></result>
+        <result property="pictureUrl" column="picture_url"></result>
+        <result property="description" column="description"></result>
+    </resultMap>
+
     <select id="getHotCoupons" resultMap="mainMap">
         SELECT *
         FROM coupon
@@ -32,5 +38,24 @@
         SELECT img_url
         FROM goods_detail_image
         WHERE coupon_id = #{id}
+    </select>
+
+    <select id="getAvailableCoupons" resultMap="walletCouponDTOMap"
+            parameterType="String">
+        SELECT title, description, picture_url
+        FROM coupon
+        WHERE id IN (
+            SELECT coupon_id
+            FROM card_package_coupon
+            WHERE card_package_id = (
+                SELECT id
+                FROM card_package
+                WHERE user_id = (
+                    SELECT id
+                    FROM user
+                    WHERE open_id = #{open_id}
+                )
+            )
+        )
     </select>
 </mapper>
