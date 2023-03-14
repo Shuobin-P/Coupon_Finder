@@ -8,7 +8,7 @@ spring:
 
 mybatis:
   mapper-locations: mapper/*.xml
-  type-aliases-package: com.google.couponfinder.entity
+  type-aliases-package: com.google.couponfinder.entity, com.google.couponfinder.dto
 
 mini:
   appid: wxfb9f6a157d4f2458
