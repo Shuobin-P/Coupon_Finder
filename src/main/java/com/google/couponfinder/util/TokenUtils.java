@@ -69,7 +69,6 @@ public class TokenUtils {
 
     public String getUsernameByToken(String token) {
         token = extractToken(token);
-        log.info("用户名：" + this.getTokenBody(token).get("username"));
         return (String) this.getTokenBody(token).get("username");
     }
 
