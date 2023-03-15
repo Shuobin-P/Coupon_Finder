@@ -29,7 +29,7 @@ public class WalletController {
 
     @GetMapping("/getAvailableCoupons")
     public ResultVO getAvailableCoupons(@RequestHeader String Authorization, @RequestParam Integer pageNum, Integer pageSize) {
-        //TODO 是否要进行身份验证？这里要拿数据的话，只需要提供用户的账号信息就行了，但是你在每个接口里面写身份认证逻辑就会让代码显得很冗余
+        // 是否要进行身份验证？这里要拿数据的话，只需要提供用户的账号信息就行了，但是你在每个接口里面写身份认证逻辑就会让代码显得很冗余
         // 因此SpringSecurity提供了身份验证的机制，
         // 如果系统没有该用户的账号信息，则不能访问接口
         PageHelper.startPage(pageNum, pageSize);
@@ -37,9 +37,11 @@ public class WalletController {
         return ResultVO.getInstance("成功获得用户可用优惠券相关信息", page);
     }
 
-    @DeleteMapping("/deleteCoupon")
-    public ResultVO deleteCoupon(@RequestParam Long id) {
+    @GetMapping("/deleteCoupon")
+    public ResultVO deleteCoupon(@RequestHeader String Authorization, @RequestParam Long id) {
+        //TODO 编写业务逻辑代码
         //在用户对应的卡包中删除对应的记录
-        return null;
+
+        return walletService.deleteCoupon(Authorization, id);
     }
 }

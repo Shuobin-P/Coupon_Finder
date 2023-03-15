@@ -29,6 +29,12 @@ public class TokenUtils {
     @Value("${jwt.expiration}")
     private long expiration;
 
+    /**
+     * 应该做一下完善的，因为这个jwt可能有问题，就是说不合法
+     *
+     * @param authorizationHeaderVal
+     * @return
+     */
     public String extractToken(String authorizationHeaderVal) {
         return authorizationHeaderVal.substring(tokenHead.length());
     }

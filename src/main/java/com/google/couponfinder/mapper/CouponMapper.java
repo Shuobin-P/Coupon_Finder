@@ -26,4 +26,8 @@ public interface CouponMapper {
     List<String> getCouponDetailImages(Long id);
 
     Page<WalletCouponDTO> getAvailableCoupons(String open_id);
+
+    void deleteCoupon(String open_id, Long id);
+
+    void minusCouponCollectedQuantity(Long id);
 }
