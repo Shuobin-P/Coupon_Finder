@@ -39,9 +39,6 @@ public class WalletController {
 
     @GetMapping("/deleteCoupon")
     public ResultVO deleteCoupon(@RequestHeader String Authorization, @RequestParam Long id) {
-        //TODO 编写业务逻辑代码
-        //在用户对应的卡包中删除对应的记录
-
         return walletService.deleteCoupon(Authorization, id);
     }
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.google.couponfinder.mapper.CardPackageCouponMapper">
+
+    <insert id="getNewCoupon">
+        INSERT INTO card_package_coupon(card_package_id, coupon_id, status)
+        VALUES (#{cardPackageID}, #{couponID}, 1)
+    </insert>
+
+    <select id="getRecord" resultType="java.lang.Integer">
+        SELECT id
+        FROM card_package_coupon
+        WHERE card_package_id = #{cardPackageID}
+          AND coupon_id = #{couponID}
+    </select>
+</mapper>
