@@ -4,7 +4,9 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.couponfinder.entity.Coupon;
 import com.google.couponfinder.service.CouponService;
+import com.google.couponfinder.util.TokenUtils;
 import com.google.couponfinder.vo.ResultVO;
+import jdk.nashorn.internal.parser.Token;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +22,12 @@ import org.springframework.web.bind.annotation.*;
 public class CouponController {
 
     private final CouponService couponService;
+    private final TokenUtils tokenUtils;
 
     @Autowired
-    public CouponController(CouponService couponService) {
+    public CouponController(CouponService couponService, TokenUtils tokenUtils) {
         this.couponService = couponService;
+        this.tokenUtils = tokenUtils;
     }
 
     /**
@@ -46,10 +50,11 @@ public class CouponController {
     }
 
     @GetMapping("/getCoupon")
-    public ResultVO getCoupon(@RequestParam Long couponId) {
-        //因为领券的话，是需要把券存储到不同的用户账号对应的卡包中，这个地方好像涉及到并发的问题？
-        //先检查数据库中的数量是否>=1，如果是的话，就-1，并把该优惠券存入该用户的卡包中
-        return null;
+    public ResultVO getCoupon(@RequestHeader String Authorization, @RequestParam Long couponId) {
+        if (Authorization == null) {
+            return ResultVO.getInstance(400, "用户未登录", null);
+        }
+        return couponService.getCoupon(Authorization, couponId);
     }
 
 }

@@ -12,6 +12,7 @@ public class Coupon {
     private String description;
     private long totalQuantity;
     private long usedQuantity;
+    private long collectedQuantity;
     private java.sql.Timestamp startDate;
     private java.sql.Timestamp expireDate;
     private long categoryId;

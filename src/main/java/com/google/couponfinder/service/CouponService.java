@@ -3,6 +3,7 @@ package com.google.couponfinder.service;
 import com.github.pagehelper.Page;
 import com.google.couponfinder.dto.CouponDetailDTO;
 import com.google.couponfinder.entity.Coupon;
+import com.google.couponfinder.vo.ResultVO;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,4 +26,6 @@ public interface CouponService {
      * @return
      */
     CouponDetailDTO getCouponDetail(Long id);
+
+    ResultVO getCoupon(String jwt, Long id);
 }
