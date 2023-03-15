@@ -11,6 +11,7 @@
         <result property="description" column="description"></result>
         <result property="totalQuantity" column="total_quantity"></result>
         <result property="usedQuantity" column="used_quantity"></result>
+        <result property="collectedQuantity" column="collected_quantity"></result>
         <result property="originalPrice" column="original_price"></result>
         <result property="presentPrice" column="present_price"></result>
     </resultMap>
@@ -27,6 +28,12 @@
     <update id="minusCouponCollectedQuantity" parameterType="Long">
         UPDATE coupon
         SET collected_quantity = collected_quantity - 1
+        WHERE id = #{id}
+    </update>
+
+    <update id="plusCouponCollectedQuantity">
+        UPDATE coupon
+        SET collected_quantity = collected_quantity + 1
         WHERE id = #{id}
     </update>
 
@@ -77,5 +84,9 @@
                 )
             )
         )
+    </select>
+
+    <select id="getLeftAvailableCoupons" resultType="Integer">
+
     </select>
 </mapper>

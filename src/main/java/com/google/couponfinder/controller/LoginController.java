@@ -24,7 +24,6 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResultVO login(@RequestBody LoginVO loginVO) {
-        //TODO get OR post
         //前端调用该接口，后台向微信服务器发送appid,appsecret,code获得session_key+open_id
         //后台存储与session_key+open_id相关的登录状态token，并发送给前端，
         //用户再请求后台接口的时候，需要携带token

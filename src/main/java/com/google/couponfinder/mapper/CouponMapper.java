@@ -30,4 +30,8 @@ public interface CouponMapper {
     void deleteCoupon(String open_id, Long id);
 
     void minusCouponCollectedQuantity(Long id);
+
+    void plusCouponCollectedQuantity(Long id);
+
+
 }
