@@ -16,9 +16,12 @@
     </resultMap>
 
     <resultMap id="walletCouponDTOMap" type="WalletCouponDTO">
+        <result property="id" column="id"></result>
         <result property="title" column="title"></result>
         <result property="pictureUrl" column="picture_url"></result>
         <result property="description" column="description"></result>
+        <result property="originalPrice" column="original_price"></result>
+        <result property="presentPrice" column="present_price"></result>
     </resultMap>
 
     <select id="getHotCoupons" resultMap="mainMap">
@@ -42,7 +45,7 @@
 
     <select id="getAvailableCoupons" resultMap="walletCouponDTOMap"
             parameterType="String">
-        SELECT title, description, picture_url
+        SELECT id, title, description, picture_url, original_price, present_price
         FROM coupon
         WHERE id IN (
             SELECT coupon_id

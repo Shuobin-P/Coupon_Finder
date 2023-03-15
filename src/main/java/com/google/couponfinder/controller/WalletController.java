@@ -36,4 +36,10 @@ public class WalletController {
         Page<WalletCouponDTO> page = walletService.getAvailableCoupons(Authorization);
         return ResultVO.getInstance("成功获得用户可用优惠券相关信息", page);
     }
+
+    @DeleteMapping("/deleteCoupon")
+    public ResultVO deleteCoupon(@RequestParam Long id) {
+        //在用户对应的卡包中删除对应的记录
+        return null;
+    }
 }
