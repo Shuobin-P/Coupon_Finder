@@ -24,6 +24,23 @@
         <result property="presentPrice" column="present_price"></result>
     </resultMap>
 
+    <update id="minusCouponCollectedQuantity" parameterType="Long">
+        UPDATE coupon
+        SET collected_quantity = collected_quantity - 1
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteCoupon">
+        DELETE
+        FROM card_package_coupon
+        WHERE card_package_id = (
+            SELECT card_package_id
+            FROM user
+            WHERE open_id = #{open_id}
+        )
+          AND coupon_id = #{id}
+    </delete>
+
     <select id="getHotCoupons" resultMap="mainMap">
         SELECT *
         FROM coupon
