@@ -10,6 +10,7 @@ import com.google.couponfinder.service.CouponService;
 import com.google.couponfinder.util.TokenUtils;
 import com.google.couponfinder.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,11 +64,14 @@ public class CouponServiceImpl implements CouponService {
         String open_id = tokenUtils.getUsernameByToken(jwt);
         Long cardPackageID = userMapper.getCardPackageID(open_id);
         //FIXME 下面这一行有问题
-        if (cardPackageCouponMapper.getRecord(cardPackageID, id) != null && coupon.getTotalQuantity() - coupon.getUsedQuantity() - coupon.getCollectedQuantity() >= 1) {
-            //将该coupon的collected_quantity + 1，并在该用户对应的卡包中加入该优惠券信息
+        //先查看该用户是否领取了该优惠券，如果没有，则可以成功领取
+        log.info("卡包号：" + cardPackageID + "优惠券ID:" + id);
+        if (cardPackageCouponMapper.getRecord(cardPackageID, id) == null && coupon.getTotalQuantity() - coupon.getUsedQuantity() - coupon.getCollectedQuantity() >= 1) {
             couponMapper.plusCouponCollectedQuantity(id);
             cardPackageCouponMapper.getNewCoupon(cardPackageID, id);
             return ResultVO.getInstance("成功领取优惠券", null);
+        } else if (cardPackageCouponMapper.getRecord(cardPackageID, id) != null) {
+            return ResultVO.getInstance(HttpStatus.SC_BAD_REQUEST, "同一种优惠券用户只能领取一张", null);
         }
         return ResultVO.getInstance("领取失败", null);
     }

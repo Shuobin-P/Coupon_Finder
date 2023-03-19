@@ -15,4 +15,6 @@ public interface WalletService {
     Page<WalletCouponDTO> getAvailableCoupons(String jwt);
 
     ResultVO deleteCoupon(String jwt, Long id);
+
+    ResultVO getWalletID(String jwt);
 }
