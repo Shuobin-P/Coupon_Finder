@@ -51,7 +51,7 @@
     <select id="getHotCoupons" resultMap="mainMap">
         SELECT *
         FROM coupon
-        WHERE category_id = 2
+        WHERE category_id = 2 AND total_quantity - used_quantity - collected_quantity > 0
         ORDER BY used_quantity DESC
     </select>
 
