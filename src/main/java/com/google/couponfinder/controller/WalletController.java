@@ -41,4 +41,9 @@ public class WalletController {
     public ResultVO deleteCoupon(@RequestHeader String Authorization, @RequestParam Long id) {
         return walletService.deleteCoupon(Authorization, id);
     }
+
+    @GetMapping("/getWalletID")
+    public ResultVO getWalletID(@RequestHeader String Authorization) {
+        return walletService.getWalletID(Authorization);
+    }
 }
