@@ -73,6 +73,14 @@ public class TokenUtils {
         }
     }
 
+    public String addClaim(String token, Object k, Object v) {
+        Map map = this.getTokenBody(token);
+        map.put(k, v);
+        token = this.generateToken(map);
+        token = "Bearer " + token;
+        return token;
+    }
+
     public String getUsernameByToken(String token) {
         token = extractToken(token);
         return (String) this.getTokenBody(token).get("username");
