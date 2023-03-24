@@ -41,7 +41,6 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public Page<Coupon> getHotCoupons() {
         Page<Coupon> list = couponMapper.getHotCoupons();
-        log.info("热点优惠券数据：" + list.toString());
         return list;
     }
 
