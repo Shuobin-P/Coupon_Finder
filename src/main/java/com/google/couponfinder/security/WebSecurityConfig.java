@@ -27,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //不禁用的话，微信小程序调用/login接口就会出现问题。
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/coupon/**", "/js/**", "/images/**", "/login","/wallet/**").permitAll()
+                .antMatchers("/coupon/**", "/js/**", "/images/**", "/login","/wallet/**","/merchant/**").permitAll()
                 .anyRequest().authenticated();
     }
 
