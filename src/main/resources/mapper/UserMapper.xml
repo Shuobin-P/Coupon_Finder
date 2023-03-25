@@ -8,4 +8,10 @@
         FROM user
         WHERE open_id = #{open_id}
     </select>
+
+    <select id="getUserID" resultType="Long">
+        SELECT id
+        FROM user
+        WHERE open_id = #{openID}
+    </select>
 </mapper>

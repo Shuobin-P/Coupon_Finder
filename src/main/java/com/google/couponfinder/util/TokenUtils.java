@@ -77,7 +77,7 @@ public class TokenUtils {
         Map map = this.getTokenBody(token);
         map.put(k, v);
         token = this.generateToken(map);
-        token = "Bearer " + token;
+        token = "Bearer  " + token;
         return token;
     }
 
@@ -87,6 +87,7 @@ public class TokenUtils {
     }
 
     public boolean isExpired(String token) {
+        log.info("token ： " + token);
         return this.getTokenBody(token).getExpiration().before(new Date());
     }
 
