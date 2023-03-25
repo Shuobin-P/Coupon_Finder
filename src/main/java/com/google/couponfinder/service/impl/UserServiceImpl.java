@@ -1,5 +1,9 @@
 package com.google.couponfinder.service.impl;
 
+import com.google.couponfinder.entity.UserRole;
+import com.google.couponfinder.mapper.RoleMapper;
+import com.google.couponfinder.mapper.UserMapper;
+import com.google.couponfinder.mapper.UserRoleMapper;
 import com.google.couponfinder.service.UserService;
 import com.google.couponfinder.util.HttpUtils;
 import com.google.couponfinder.util.TokenUtils;
@@ -34,12 +38,21 @@ public class UserServiceImpl implements UserService {
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
+    private final UserMapper userMapper;
+    private final RoleMapper roleMapper;
+
+    private final UserRoleMapper userRoleMapper;
+
     private final TokenUtils tokenUtils;
 
     @Autowired
-    public UserServiceImpl(TokenUtils tokenUtils) {
+    public UserServiceImpl(UserMapper userMapper, RoleMapper roleMapper, UserRoleMapper userRoleMapper, TokenUtils tokenUtils) {
+        this.userMapper = userMapper;
+        this.roleMapper = roleMapper;
+        this.userRoleMapper = userRoleMapper;
         this.tokenUtils = tokenUtils;
     }
+
 
     @Override
     public ResultVO login(String code) {
@@ -86,7 +99,11 @@ public class UserServiceImpl implements UserService {
         map.put("username", openid);
         map.put("session_key", session_key);
         map.put("created", new Date());
-
+        //如果用户是Merchant，则在map中加入isMerchant
+        UserRole userRole = userRoleMapper.get(userMapper.getUserID(openid), roleMapper.getRoleID("merchant"));
+        if (userRole != null) {
+            map.put("isMerchant", true);
+        }
         String token = tokenUtils.generateToken(map);
         Map<String, Object> tokenMap = new HashMap<>(2);
         tokenMap.put("tokenHead", tokenHead);

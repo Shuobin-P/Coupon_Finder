@@ -1,9 +1,9 @@
 spring:
   application:
   datasource:
-    username: shuobin
-    password: $Psb011012
-    url: jdbc:mysql://39.108.12.40:3306/coupon_finder?serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/coupon_finder?serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis:
