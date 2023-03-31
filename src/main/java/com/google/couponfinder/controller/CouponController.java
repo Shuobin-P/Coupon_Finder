@@ -80,9 +80,5 @@ public class CouponController {
         }
     }
 
-    @GetMapping("/useCoupon")
-    public ResultVO useCoupon(@RequestParam Long coupon_id, Long wallet_id) {
-        //验证请求是否是商家发出的，然后检查coupon_id和wallet_id是否合法
-        return null;
-    }
+
 }

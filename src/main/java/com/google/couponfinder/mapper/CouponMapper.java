@@ -3,6 +3,7 @@ package com.google.couponfinder.mapper;
 import com.github.pagehelper.Page;
 import com.google.couponfinder.dto.WalletCouponDTO;
 import com.google.couponfinder.entity.Coupon;
+import com.google.couponfinder.vo.NewCouponInfoVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,6 +15,14 @@ import java.util.List;
  */
 @Mapper
 public interface CouponMapper {
+    /**
+     * 返回该Coupon的id
+     *
+     * @param coupon
+     * @return
+     */
+    Long addCoupon(Coupon coupon);
+
     /**
      * 获得使用数量最多的优惠券的相关信息，并且按照从高到低的顺序排列
      *
