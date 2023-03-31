@@ -1,5 +1,6 @@
 package com.google.couponfinder.service;
 
+import com.google.couponfinder.vo.NewCouponInfoVO;
 import com.google.couponfinder.vo.ResultVO;
 import org.springframework.stereotype.Service;
 
@@ -11,5 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface MerchantService {
     ResultVO verify(String key, String Authorization);
+
+    ResultVO releaseNewCoupon(NewCouponInfoVO newCouponInfoVO);
 
 }

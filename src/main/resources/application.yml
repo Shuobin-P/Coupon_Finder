@@ -20,3 +20,9 @@ jwt:
   tokenHead: 'Bearer '
   secret: bingbingbing
   expiration: 1800000
+
+qiniu:
+  accessKey: VjqyGJIWeKMORqLsJR-3CMSBiKTxYF25wC5CSPbc
+  secretKey: adec1oMqUWZAUKPruXLwus2822HK9wMJwpTllO8J
+  bucketName: coupon-finder-images
+  path: rsa5pzqlo.hn-bkt.clouddn.com
