@@ -25,6 +25,13 @@
         <result property="presentPrice" column="present_price"></result>
     </resultMap>
 
+    <insert id="addCoupon" parameterType="Coupon">
+        INSERT INTO coupon(title, status, picture_url, description, total_quantity, used_quantity, collected_quantity,
+                           start_date, expire_date, category_id, original_price, present_price)
+        values (#{title}, #{status}, #{pictureUrl}, #{description}, #{totalQuantity}, #{usedQuantity},
+                #{collectedQuantity}, #{startDate}, #{expireDate}, #{categoryId}, #{originalPrice}, #{presentPrice})
+    </insert>
+
     <update id="minusCouponCollectedQuantity" parameterType="Long">
         UPDATE coupon
         SET collected_quantity = collected_quantity - 1
@@ -51,7 +58,8 @@
     <select id="getHotCoupons" resultMap="mainMap">
         SELECT *
         FROM coupon
-        WHERE category_id = 2 AND total_quantity - used_quantity - collected_quantity > 0
+        WHERE category_id = 2
+          AND total_quantity - used_quantity - collected_quantity > 0
         ORDER BY used_quantity DESC
     </select>
 

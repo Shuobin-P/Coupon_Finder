@@ -1,16 +1,18 @@
 package com.google.couponfinder.service.impl;
 
-import com.google.couponfinder.mapper.RoleMapper;
-import com.google.couponfinder.mapper.UserMapper;
-import com.google.couponfinder.mapper.UserRoleMapper;
+import com.google.couponfinder.entity.Coupon;
+import com.google.couponfinder.mapper.*;
 import com.google.couponfinder.service.MerchantService;
 import com.google.couponfinder.util.TokenUtils;
+import com.google.couponfinder.vo.NewCouponInfoVO;
 import com.google.couponfinder.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,14 +30,20 @@ public class MerchantServiceImpl implements MerchantService {
     private final TokenUtils tokenUtils;
     private final UserMapper userMapper;
     private final RoleMapper roleMapper;
+    private final CouponMapper couponMapper;
+    private final CategoryMapper categoryMapper;
     private final UserRoleMapper userRoleMapper;
+    private final GoodsDetailImageMapper goodsDetailImageMapper;
 
     @Autowired
-    public MerchantServiceImpl(TokenUtils tokenUtils, UserMapper userMapper, RoleMapper roleMapper, UserRoleMapper userRoleMapper) {
+    public MerchantServiceImpl(TokenUtils tokenUtils, UserMapper userMapper, RoleMapper roleMapper, CouponMapper couponMapper, CategoryMapper categoryMapper, UserRoleMapper userRoleMapper, GoodsDetailImageMapper goodsDetailImageMapper) {
         this.tokenUtils = tokenUtils;
         this.userMapper = userMapper;
         this.roleMapper = roleMapper;
+        this.couponMapper = couponMapper;
+        this.categoryMapper = categoryMapper;
         this.userRoleMapper = userRoleMapper;
+        this.goodsDetailImageMapper = goodsDetailImageMapper;
     }
 
     @Override
@@ -51,12 +59,46 @@ public class MerchantServiceImpl implements MerchantService {
             token = tokenUtils.refreshToken(token);
         }
         token = tokenUtils.addClaim(token, "isMerchant", true);
-        //FIXME 一旦完成身份认证，数据库中应该就要保存用户的商家身份信息，下次登录的时候，用户就不要进行身份验证了。
+        //一旦完成身份认证，数据库中应该就要保存用户的商家身份信息，下次登录的时候，用户就不要进行身份验证了。
         Long userID = userMapper.getUserID(tokenUtils.getUsernameByToken(Authorization));
         Long roleID = roleMapper.getRoleID("merchant");
-        userRoleMapper.insert(userID,roleID);
+        userRoleMapper.insert(userID, roleID);
         Map map = new HashMap(1);
         map.put("token", token);
         return ResultVO.getInstance(1, "成功添加商家权限", map);
+    }
+
+    @Override
+    public ResultVO releaseNewCoupon(NewCouponInfoVO newCouponInfoVO) {
+        Coupon targetCoupon = new Coupon();
+        targetCoupon.setTitle(newCouponInfoVO.getTitle());
+        //判断newCouponInfoVO中的时间和系统现在的时间大小，来设置status
+        //FIXME newCouponInfoVO中的时间数据是数字，不是字符串
+        Long couponStartDate = newCouponInfoVO.getStartDate();
+        Long sysCurrentDate = System.currentTimeMillis();
+        log.info("新优惠券的开始生效时间：" + couponStartDate);
+        log.info("系统当前时间：：" + sysCurrentDate);
+        if (sysCurrentDate > couponStartDate) {
+            targetCoupon.setStatus("1");
+        } else if (sysCurrentDate < couponStartDate) {
+            targetCoupon.setStatus("0");
+        }
+        targetCoupon.setPictureUrl(newCouponInfoVO.getProductURL());
+        targetCoupon.setDescription(newCouponInfoVO.getDescription());
+        targetCoupon.setTotalQuantity(newCouponInfoVO.getQuantity());
+        targetCoupon.setUsedQuantity(0);
+        targetCoupon.setCollectedQuantity(0);
+        targetCoupon.setStartDate(new Timestamp(newCouponInfoVO.getStartDate()));
+        targetCoupon.setExpireDate(new Timestamp(newCouponInfoVO.getExpireDate()));
+        log.info("新插入的优惠券所属类别：" + newCouponInfoVO.getCategory());
+        targetCoupon.setCategoryId(categoryMapper.getCategoryID(newCouponInfoVO.getCategory()));
+        targetCoupon.setOriginalPrice(newCouponInfoVO.getOriginalPrice().doubleValue());
+        targetCoupon.setPresentPrice(newCouponInfoVO.getPresentPrice().doubleValue());
+        Long couponID = couponMapper.addCoupon(targetCoupon);
+        //商品的详细信息图片需要额外添加
+        for (int i = 0; i < newCouponInfoVO.getProductDetailURL().length; i++) {
+            goodsDetailImageMapper.addGoodsDetailImage(couponID, newCouponInfoVO.getProductDetailURL()[i]);
+        }
+        return ResultVO.getInstance("成功提交新优惠券的信息", null);
     }
 }
