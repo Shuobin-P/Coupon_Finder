@@ -9,8 +9,22 @@
         VALUES (#{cardPackageID}, #{couponID}, 1)
     </insert>
 
+    <delete id="removeRecord">
+        DELETE
+        FROM card_package_coupon
+        WHERE card_package_id = #{cardPackageID}
+          AND coupon_id = #{couponID}
+    </delete>
+
     <select id="getRecord" resultType="java.lang.Integer">
         SELECT id
+        FROM card_package_coupon
+        WHERE card_package_id = #{cardPackageID}
+          AND coupon_id = #{couponID}
+    </select>
+
+    <select id="getEntity" resultType="com.google.couponfinder.entity.CardPackageCoupon">
+        SELECT *
         FROM card_package_coupon
         WHERE card_package_id = #{cardPackageID}
           AND coupon_id = #{couponID}

@@ -97,6 +97,7 @@ public class UserServiceImpl implements UserService {
         }
         Map<String, Object> map = new HashMap<>(16);
         map.put("username", openid);
+        log.info("openid为:" + openid);
         map.put("session_key", session_key);
         map.put("created", new Date());
         //如果用户是Merchant，则在map中加入isMerchant
