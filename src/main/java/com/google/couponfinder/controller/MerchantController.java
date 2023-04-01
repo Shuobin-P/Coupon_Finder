@@ -54,11 +54,4 @@ public class MerchantController {
         log.info("过期时间：" + dateUtils.transformMicroSecondsTimestampToDate(couponInfoVO.getExpireDate()));
         return merchantService.releaseNewCoupon(couponInfoVO);
     }
-
-    @GetMapping("/useCoupon")
-    public ResultVO useCoupon(@RequestParam Long coupon_id, Long wallet_id) {
-        //验证请求是否是商家发出的，然后检查coupon_id和wallet_id是否合法
-        //FIXME 如何前端那边一定要使用https协议，这个功能应该如何处理？
-        return null;
-    }
 }

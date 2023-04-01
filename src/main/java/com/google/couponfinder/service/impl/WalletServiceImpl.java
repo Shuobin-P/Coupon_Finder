@@ -2,6 +2,8 @@ package com.google.couponfinder.service.impl;
 
 import com.github.pagehelper.Page;
 import com.google.couponfinder.dto.WalletCouponDTO;
+import com.google.couponfinder.entity.CardPackageCoupon;
+import com.google.couponfinder.mapper.CardPackageCouponMapper;
 import com.google.couponfinder.mapper.CouponMapper;
 import com.google.couponfinder.mapper.UserMapper;
 import com.google.couponfinder.service.WalletService;
@@ -21,12 +23,14 @@ public class WalletServiceImpl implements WalletService {
     private final TokenUtils tokenUtils;
     private final UserMapper userMapper;
     private final CouponMapper couponMapper;
+    private final CardPackageCouponMapper cardPackageCouponMapper;
 
     @Autowired
-    public WalletServiceImpl(TokenUtils tokenUtils, UserMapper userMapper, CouponMapper couponMapper) {
+    public WalletServiceImpl(TokenUtils tokenUtils, UserMapper userMapper, CouponMapper couponMapper, CardPackageCouponMapper cardPackageCouponMapper) {
         this.tokenUtils = tokenUtils;
         this.userMapper = userMapper;
         this.couponMapper = couponMapper;
+        this.cardPackageCouponMapper = cardPackageCouponMapper;
     }
 
     @Transactional(rollbackFor = Throwable.class)
@@ -57,5 +61,16 @@ public class WalletServiceImpl implements WalletService {
         String open_id = tokenUtils.getUsernameByToken(jwt);
         Long walletID = userMapper.getCardPackageID(open_id);
         return ResultVO.getInstance("成功查询到用户对于的卡包ID", walletID);
+    }
+
+    @Override
+    public CardPackageCoupon getRecord(Long wallet_id, Long coupon_id) {
+        CardPackageCoupon entity = cardPackageCouponMapper.getEntity(coupon_id, wallet_id);
+        return entity;
+    }
+
+    @Override
+    public void useCoupon(Long coupon_id, Long wallet_id) {
+        cardPackageCouponMapper.removeRecord(coupon_id, wallet_id);
     }
 }

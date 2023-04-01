@@ -2,6 +2,7 @@ package com.google.couponfinder.service;
 
 import com.github.pagehelper.Page;
 import com.google.couponfinder.dto.WalletCouponDTO;
+import com.google.couponfinder.entity.CardPackageCoupon;
 import com.google.couponfinder.vo.ResultVO;
 import org.springframework.stereotype.Service;
 
@@ -17,4 +18,8 @@ public interface WalletService {
     ResultVO deleteCoupon(String jwt, Long id);
 
     ResultVO getWalletID(String jwt);
+
+    CardPackageCoupon getRecord(Long wallet_id, Long coupon_id);
+
+    void useCoupon(Long coupon_id, Long wallet_id);
 }
