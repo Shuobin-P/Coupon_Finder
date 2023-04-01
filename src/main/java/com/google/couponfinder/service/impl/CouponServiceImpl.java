@@ -64,6 +64,7 @@ public class CouponServiceImpl implements CouponService {
         Long cardPackageID = userMapper.getCardPackageID(open_id);
         //FIXME 下面这一行有问题
         //先查看该用户是否领取了该优惠券，如果没有，则可以成功领取
+        log.info("该用户的open_id为" + open_id);
         log.info("卡包号：" + cardPackageID + "优惠券ID:" + id);
         if (cardPackageCouponMapper.getRecord(cardPackageID, id) == null && coupon.getTotalQuantity() - coupon.getUsedQuantity() - coupon.getCollectedQuantity() >= 1) {
             couponMapper.plusCouponCollectedQuantity(id);
