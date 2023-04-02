@@ -7,6 +7,7 @@ import com.google.couponfinder.vo.NewCouponInfoVO;
 import com.google.couponfinder.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,9 @@ public class MerchantController {
     private final QiniuUtils qiniuUtils;
     private final MerchantService merchantService;
 
+    @Value("${qiniu.path}")
+    private String path;
+
     @Autowired
     public MerchantController(DateUtils dateUtils, QiniuUtils qiniuUtils, MerchantService merchantService) {
         this.dateUtils = dateUtils;
@@ -43,7 +47,7 @@ public class MerchantController {
         log.info("商家上传文件楼");
         String url = qiniuUtils.upload((FileInputStream) uploadFile.getInputStream(), uploadFile.getOriginalFilename());
         log.info("图片url：" + url);
-        return ResultVO.getInstance("成功上传产品图片", url);
+        return ResultVO.getInstance("成功上传产品图片", "http://" + path + "/" + url);
     }
 
     @PostMapping("/commitNewCouponInfo")
