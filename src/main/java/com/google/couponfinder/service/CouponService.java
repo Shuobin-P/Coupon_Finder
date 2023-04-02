@@ -20,6 +20,11 @@ public interface CouponService {
      */
     Page<Coupon> getHotCoupons();
 
+    Page<Coupon> getHotFoodCoupons();
+
+    Page<Coupon> getOtherHotCoupons();
+
+
     /**
      * 获得优惠券详细信息
      *

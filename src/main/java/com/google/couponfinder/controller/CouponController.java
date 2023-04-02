@@ -47,7 +47,21 @@ public class CouponController {
     public ResultVO getHotCoupons(@RequestParam Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         Page<Coupon> page = couponService.getHotCoupons();
-        return ResultVO.getInstance("成功获得使用数量最多的优惠券相关信息", page);
+        return ResultVO.getInstance("成功获得饮品使用数量最多的优惠券相关信息", page);
+    }
+
+    @GetMapping("/getHotFoodCoupons")
+    public ResultVO getHotFoodCoupons(@RequestParam Integer foodPageNum, Integer pageSize) {
+        PageHelper.startPage(foodPageNum, pageSize);
+        Page<Coupon> page = couponService.getHotFoodCoupons();
+        return ResultVO.getInstance("成功获得食物使用数量最多的优惠券相关信息", page);
+    }
+
+    @GetMapping("/getHotOtherCoupons")
+    public ResultVO getHotOtherCoupons(@RequestParam Integer otherPageNum, Integer pageSize) {
+        PageHelper.startPage(otherPageNum, pageSize);
+        Page<Coupon> page = couponService.getOtherHotCoupons();
+        return ResultVO.getInstance("成功获得其他类型使用数量最多的优惠券相关信息", page);
     }
 
     @GetMapping("/getCouponInfo")

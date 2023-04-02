@@ -30,6 +30,10 @@ public interface CouponMapper {
      */
     Page<Coupon> getHotCoupons();
 
+    Page<Coupon> getHotFoodCoupons();
+
+    Page<Coupon> getOtherHotCoupons();
+
     Coupon getCouponInfo(Long id);
 
     List<String> getCouponDetailImages(Long id);
@@ -41,6 +45,5 @@ public interface CouponMapper {
     void minusCouponCollectedQuantity(Long id);
 
     void plusCouponCollectedQuantity(Long id);
-
 
 }
