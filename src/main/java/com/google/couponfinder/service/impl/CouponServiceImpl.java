@@ -7,6 +7,7 @@ import com.google.couponfinder.mapper.CardPackageCouponMapper;
 import com.google.couponfinder.mapper.CouponMapper;
 import com.google.couponfinder.mapper.UserMapper;
 import com.google.couponfinder.service.CouponService;
+import com.google.couponfinder.util.DateUtils;
 import com.google.couponfinder.util.TokenUtils;
 import com.google.couponfinder.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
@@ -26,16 +27,18 @@ import java.util.List;
 @Service
 public class CouponServiceImpl implements CouponService {
     private final UserMapper userMapper;
-    private final CouponMapper couponMapper;
-    private final CardPackageCouponMapper cardPackageCouponMapper;
     private final TokenUtils tokenUtils;
+    private final CouponMapper couponMapper;
+    private final DateUtils dateUtils;
+    private final CardPackageCouponMapper cardPackageCouponMapper;
 
     @Autowired
-    public CouponServiceImpl(UserMapper userMapper, CouponMapper couponMapper, CardPackageCouponMapper cardPackageCouponMapper, TokenUtils tokenUtils) {
+    public CouponServiceImpl(UserMapper userMapper, TokenUtils tokenUtils, CouponMapper couponMapper, DateUtils dateUtils, CardPackageCouponMapper cardPackageCouponMapper) {
         this.userMapper = userMapper;
-        this.couponMapper = couponMapper;
-        this.cardPackageCouponMapper = cardPackageCouponMapper;
         this.tokenUtils = tokenUtils;
+        this.couponMapper = couponMapper;
+        this.dateUtils = dateUtils;
+        this.cardPackageCouponMapper = cardPackageCouponMapper;
     }
 
     @Override
@@ -45,12 +48,31 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
+    public Page<Coupon> getHotFoodCoupons() {
+        Page<Coupon> list = couponMapper.getHotFoodCoupons();
+        return list;
+    }
+
+    @Override
+    public Page<Coupon> getOtherHotCoupons() {
+        Page<Coupon> list = couponMapper.getOtherHotCoupons();
+        return list;
+    }
+
+    @Override
     public CouponDetailDTO getCouponDetail(Long id) {
         Coupon coupon = couponMapper.getCouponInfo(id);
+        //FIXME 拿到的coupon中没有开始日期和结束日期。
         log.info("优惠券详细信息" + coupon);
         List<String> images = couponMapper.getCouponDetailImages(id);
         CouponDetailDTO detailDTO = new CouponDetailDTO();
         BeanUtils.copyProperties(coupon, detailDTO);
+        detailDTO.setStartDate(coupon.getStartDate().getTime());
+        detailDTO.setExpireDate(coupon.getExpireDate().getTime());
+        log.info(detailDTO.toString());
+        //String startDate = dateUtils.transformMicroSecondsTimestampToDate(detailDTO.getStartDate());
+        //detailDTO.setS
+        //log.info("开始生效时间为：" + startDate);
         detailDTO.setImages(images);
         log.info("发送给前端的优惠券详细信息" + detailDTO);
         return detailDTO;
