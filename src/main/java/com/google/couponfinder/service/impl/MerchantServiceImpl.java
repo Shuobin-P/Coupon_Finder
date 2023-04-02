@@ -7,7 +7,6 @@ import com.google.couponfinder.util.TokenUtils;
 import com.google.couponfinder.vo.NewCouponInfoVO;
 import com.google.couponfinder.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -73,7 +72,7 @@ public class MerchantServiceImpl implements MerchantService {
         Coupon targetCoupon = new Coupon();
         targetCoupon.setTitle(newCouponInfoVO.getTitle());
         //判断newCouponInfoVO中的时间和系统现在的时间大小，来设置status
-        //FIXME newCouponInfoVO中的时间数据是数字，不是字符串
+        //newCouponInfoVO中的时间数据是数字，不是字符串
         Long couponStartDate = newCouponInfoVO.getStartDate();
         Long sysCurrentDate = System.currentTimeMillis();
         log.info("新优惠券的开始生效时间：" + couponStartDate);
@@ -94,9 +93,16 @@ public class MerchantServiceImpl implements MerchantService {
         targetCoupon.setCategoryId(categoryMapper.getCategoryID(newCouponInfoVO.getCategory()));
         targetCoupon.setOriginalPrice(newCouponInfoVO.getOriginalPrice().doubleValue());
         targetCoupon.setPresentPrice(newCouponInfoVO.getPresentPrice().doubleValue());
-        Long couponID = couponMapper.addCoupon(targetCoupon);
+        //下面这个返回值有问题，不应该是1的
+        Long couponID = -1L;
+        if (couponMapper.addCoupon(targetCoupon) > 0) {
+            couponID = targetCoupon.getId();
+        }
         //商品的详细信息图片需要额外添加
+        log.info("新添加的优惠券" + newCouponInfoVO.getTitle() + "的商品详情图片数量为" + newCouponInfoVO.getProductDetailURL().length);
         for (int i = 0; i < newCouponInfoVO.getProductDetailURL().length; i++) {
+            log.info("向数据库中添加" + newCouponInfoVO.getTitle() + "的详细图片数据");
+            log.info("向数据库中添加" + newCouponInfoVO.getTitle() + "的CouponID为：" + couponID);
             goodsDetailImageMapper.addGoodsDetailImage(couponID, newCouponInfoVO.getProductDetailURL()[i]);
         }
         return ResultVO.getInstance("成功提交新优惠券的信息", null);

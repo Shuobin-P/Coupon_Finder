@@ -31,6 +31,7 @@ public class QiniuUtils {
     private String bucketName;
 
 
+
     @Autowired
     public QiniuUtils(Auth auth, UploadManager uploadManager, BucketManager bucketManager) {
         this.auth = auth;
