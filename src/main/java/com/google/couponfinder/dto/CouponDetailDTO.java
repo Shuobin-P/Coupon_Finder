@@ -19,8 +19,8 @@ public class CouponDetailDTO {
     private Long totalQuantity;
     private Long usedQuantity;
     private Long collectedQuantity;
-    private java.sql.Timestamp startDate;
-    private java.sql.Timestamp expireDate;
+    private Long startDate;
+    private Long expireDate;
     private Long categoryId;
     private Double originalPrice;
     private Double presentPrice;
