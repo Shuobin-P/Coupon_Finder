@@ -30,6 +30,9 @@
                            start_date, expire_date, category_id, original_price, present_price)
         values (#{title}, #{status}, #{pictureUrl}, #{description}, #{totalQuantity}, #{usedQuantity},
                 #{collectedQuantity}, #{startDate}, #{expireDate}, #{categoryId}, #{originalPrice}, #{presentPrice})
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
     </insert>
 
     <update id="minusCouponCollectedQuantity" parameterType="Long">

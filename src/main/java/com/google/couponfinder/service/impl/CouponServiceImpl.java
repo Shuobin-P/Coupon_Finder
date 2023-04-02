@@ -52,6 +52,7 @@ public class CouponServiceImpl implements CouponService {
         CouponDetailDTO detailDTO = new CouponDetailDTO();
         BeanUtils.copyProperties(coupon, detailDTO);
         detailDTO.setImages(images);
+        log.info("发送给前端的优惠券详细信息" + detailDTO);
         return detailDTO;
     }
 
