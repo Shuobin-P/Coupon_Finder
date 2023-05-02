@@ -46,4 +46,6 @@ public interface CouponMapper {
 
     void plusCouponCollectedQuantity(Long id);
 
+    Page<Coupon> findCoupon(String queryInfo);
+
 }

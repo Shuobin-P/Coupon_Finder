@@ -121,4 +121,10 @@
 
     </select>
 
+    <select id="findCoupon" resultMap="mainMap">
+        SELECT *
+        FROM coupon
+        WHERE title LIKE CONCAT('%',#{queryInfo},'%')
+    </select>
+
 </mapper>
