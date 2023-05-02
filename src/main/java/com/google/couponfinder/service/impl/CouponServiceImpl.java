@@ -62,7 +62,6 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public CouponDetailDTO getCouponDetail(Long id) {
         Coupon coupon = couponMapper.getCouponInfo(id);
-        //FIXME 拿到的coupon中没有开始日期和结束日期。
         log.info("优惠券详细信息" + coupon);
         List<String> images = couponMapper.getCouponDetailImages(id);
         CouponDetailDTO detailDTO = new CouponDetailDTO();
@@ -97,5 +96,11 @@ public class CouponServiceImpl implements CouponService {
             return ResultVO.getInstance(HttpStatus.SC_BAD_REQUEST, "同一种优惠券用户只能领取一张", null);
         }
         return ResultVO.getInstance("领取失败", null);
+    }
+
+    @Override
+    public Page<Coupon> findCoupon(String queryInfo) {
+        Page<Coupon> list = couponMapper.findCoupon(queryInfo);
+        return list;
     }
 }

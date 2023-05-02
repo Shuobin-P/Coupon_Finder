@@ -69,12 +69,36 @@ public class CouponController {
         return ResultVO.getInstance("成功获得优惠券详细信息", couponService.getCouponDetail(id));
     }
 
+    /**
+     * 领取优惠券
+     *
+     * @param Authorization
+     * @param couponId
+     * @return
+     */
     @GetMapping("/getCoupon")
     public ResultVO getCoupon(@RequestHeader String Authorization, @RequestParam Long couponId) {
         if (Authorization == null) {
             return ResultVO.getInstance(400, "用户未登录", null);
         }
         return couponService.getCoupon(Authorization, couponId);
+    }
+
+    /**
+     * 模糊查询优惠券
+     *
+     * @param Authorization
+     * @param queryInfo
+     * @return
+     */
+    @GetMapping("/findCoupon")
+    public ResultVO findCoupon(@RequestHeader String Authorization, @RequestParam String queryInfo, Integer pageNum, Integer pageSize) {
+        if (Authorization == null) {
+            return ResultVO.getInstance(400, "用户未登录", null);
+        }
+        PageHelper.startPage(pageNum, pageSize);
+        Page<Coupon> page = couponService.findCoupon(queryInfo);
+        return ResultVO.getInstance("成功查询到相关的优惠券信息", page);
     }
 
     @GetMapping("/generateQRCode")
