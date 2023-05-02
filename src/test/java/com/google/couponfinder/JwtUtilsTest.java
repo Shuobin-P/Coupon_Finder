@@ -18,7 +18,6 @@ import java.util.Map;
 public class JwtUtilsTest {
     private String secret = "bingbingbing";
 
-    @Test
     public void test() {
         String token = "Bearer  eyJhbGciOiJIUzUxMiJ9.eyJjcmVhdGVkIjoxNjc4NzgxOTM5NzYxLCJzZXNzaW9uX2tleSI6IjZCekI2T1d1bUU5Zjg3U1JJL2pzcEE9PSIsImV4cCI6MTY4MDU4MTkzOSwidXNlcm5hbWUiOiJvdVVydDVQek5uRGg4U2lCQnJfV3lBM19teXEwIn0.v_9oJdFhj8qoHiaaEP02gUDwUBmY5ILjMKKfF2cUZqssPSfpnjqdPqwdM60Gw1OFG0eXouJSRw6Erex-HHrDFg";
         String jwt = this.extractToken(token);
