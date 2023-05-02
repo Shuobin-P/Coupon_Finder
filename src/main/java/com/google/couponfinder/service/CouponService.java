@@ -33,4 +33,6 @@ public interface CouponService {
     CouponDetailDTO getCouponDetail(Long id);
 
     ResultVO getCoupon(String jwt, Long id);
+
+    Page<Coupon> findCoupon(String queryInfo);
 }
