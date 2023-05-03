@@ -5,6 +5,11 @@ spring:
     password: 123456
     url: jdbc:mysql://localhost:3306/coupon_finder?serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 127.0.0.1
+    database: 1
+    port: 6379
+    password: 123456
 
 mybatis:
   mapper-locations: mapper/*.xml
