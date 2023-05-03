@@ -18,10 +18,7 @@ import java.util.Set;
 @Slf4j
 @Service
 public class SearchServiceImpl implements SearchService {
-    //FIXME 虽然用这个方便，但是如果系统关闭了，之前的热搜数据就拿不到了，你可以考虑把这些数据写入到数据库，也可以考虑使用redis来做持久化处理。
-    //为了完成毕设还是说考虑技术。redis的好处就是分布式系统的话，比较方便数据共享。持久化应该也好处理一些。
-    //系统启动时：从数据库查询热搜词及其次数数据，初始化ConcurrentHashMap
-    //系统结束运行时，并且需要注意把ConcurrentHashMap与数据库进行数据同步处理
+    //Redis的好处就是分布式系统的话，比较方便数据共享。持久化应该也好处理一些。
 
     private String sortedSetName = "coupon_finder:hotKeywordsZSet";
     private final RedisUtils redisUtils;
