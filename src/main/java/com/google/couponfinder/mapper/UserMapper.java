@@ -1,5 +1,6 @@
 package com.google.couponfinder.mapper;
 
+import com.google.couponfinder.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,5 +12,9 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserMapper {
     Long getCardPackageID(String open_id);
 
+    Long updateUserCardPackageID(Long user_id, Long cardPackageId);
+
     Long getUserID(String openID);
+
+    Long insertUser(User user);
 }

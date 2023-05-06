@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
 public interface MerchantService {
     ResultVO verify(String key, String Authorization);
 
-    ResultVO releaseNewCoupon(NewCouponInfoVO newCouponInfoVO);
+    ResultVO releaseNewCoupon(String jwt, NewCouponInfoVO newCouponInfoVO);
 
 }
