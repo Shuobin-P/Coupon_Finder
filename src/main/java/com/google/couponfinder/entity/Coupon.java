@@ -18,6 +18,7 @@ public class Coupon {
     private long categoryId;
     private Double originalPrice;
     private Double presentPrice;
+    private Long merchantID;
 
 
 }

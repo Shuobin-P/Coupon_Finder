@@ -9,7 +9,7 @@
         <result property="roleID" column="role_id"></result>
     </resultMap>
 
-    <insert id="insert" parameterType="Integer">
+    <insert id="insert" parameterType="Long">
         INSERT INTO user_role (user_id, role_id)
         values (#{userID}, #{roleID})
     </insert>

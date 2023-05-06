@@ -68,7 +68,7 @@ public class MerchantServiceImpl implements MerchantService {
     }
 
     @Override
-    public ResultVO releaseNewCoupon(NewCouponInfoVO newCouponInfoVO) {
+    public ResultVO releaseNewCoupon(String jwt, NewCouponInfoVO newCouponInfoVO) {
         Coupon targetCoupon = new Coupon();
         targetCoupon.setTitle(newCouponInfoVO.getTitle());
         //判断newCouponInfoVO中的时间和系统现在的时间大小，来设置status
@@ -93,10 +93,13 @@ public class MerchantServiceImpl implements MerchantService {
         targetCoupon.setCategoryId(categoryMapper.getCategoryID(newCouponInfoVO.getCategory()));
         targetCoupon.setOriginalPrice(newCouponInfoVO.getOriginalPrice().doubleValue());
         targetCoupon.setPresentPrice(newCouponInfoVO.getPresentPrice().doubleValue());
+        targetCoupon.setMerchantID(userMapper.getUserID(tokenUtils.getUsernameByToken(jwt)));
         //下面这个返回值有问题，不应该是1的
         Long couponID = -1L;
         if (couponMapper.addCoupon(targetCoupon) > 0) {
             couponID = targetCoupon.getId();
+            log.info("新插入的优惠券ID为 " + couponID);
+
         }
         //商品的详细信息图片需要额外添加
         log.info("新添加的优惠券" + newCouponInfoVO.getTitle() + "的商品详情图片数量为" + newCouponInfoVO.getProductDetailURL().length);
