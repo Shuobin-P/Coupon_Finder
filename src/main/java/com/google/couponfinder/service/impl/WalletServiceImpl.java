@@ -2,6 +2,7 @@ package com.google.couponfinder.service.impl;
 
 import com.github.pagehelper.Page;
 import com.google.couponfinder.dto.WalletCouponDTO;
+import com.google.couponfinder.dto.WalletUsedCouponDTO;
 import com.google.couponfinder.entity.CardPackageCoupon;
 import com.google.couponfinder.mapper.CardPackageCouponMapper;
 import com.google.couponfinder.mapper.CouponMapper;
@@ -9,6 +10,7 @@ import com.google.couponfinder.mapper.UserMapper;
 import com.google.couponfinder.service.WalletService;
 import com.google.couponfinder.util.TokenUtils;
 import com.google.couponfinder.vo.ResultVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @version 1.0
  * @date 2023/3/14 16:30
  */
+@Slf4j
 @Service
 public class WalletServiceImpl implements WalletService {
     private final TokenUtils tokenUtils;
@@ -38,6 +41,13 @@ public class WalletServiceImpl implements WalletService {
     public Page<WalletCouponDTO> getAvailableCoupons(String jwt) {
         String open_id = tokenUtils.getUsernameByToken(jwt);
         Page<WalletCouponDTO> list = couponMapper.getAvailableCoupons(open_id);
+        return list;
+    }
+
+    @Override
+    public Page<WalletUsedCouponDTO> getCouponUsedHistory(String jwt) {
+        String open_id = tokenUtils.getUsernameByToken(jwt);
+        Page<WalletUsedCouponDTO> list = couponMapper.getCouponUsedHistory(open_id);
         return list;
     }
 
@@ -71,6 +81,6 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public void useCoupon(Long coupon_id, Long wallet_id) {
-        cardPackageCouponMapper.removeRecord(coupon_id, wallet_id);
+        cardPackageCouponMapper.updateRecordStatus((byte) 2, coupon_id, wallet_id);
     }
 }

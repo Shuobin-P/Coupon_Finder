@@ -1,5 +1,6 @@
 package com.google.couponfinder.service.impl;
 
+import com.google.couponfinder.entity.User;
 import com.google.couponfinder.entity.UserRole;
 import com.google.couponfinder.mapper.RoleMapper;
 import com.google.couponfinder.mapper.UserMapper;
@@ -16,6 +17,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -53,7 +55,7 @@ public class UserServiceImpl implements UserService {
         this.tokenUtils = tokenUtils;
     }
 
-
+    @Transactional(rollbackFor = Throwable.class)
     @Override
     public ResultVO login(String code) {
         log.info("Code的值为:" + code);
@@ -91,13 +93,23 @@ public class UserServiceImpl implements UserService {
         if (responsePairMap.get("errcode") == null) {
             session_key = (String) responsePairMap.get("session_key");
             openid = (String) responsePairMap.get("openid");
+            //检查数据库中是否存在该用户，如果没有需要把open_id存入数据库
+            Long userId = userMapper.getUserID(openid);
+            if (userId == null) {
+                User user = new User();
+                user.setName("默认用户名");
+                user.setOpen_id(openid);
+                userMapper.insertUser(user);
+                //将插入后得到的User_id作为ta的卡包ID
+                Long uID = userMapper.getUserID(openid);
+                userMapper.updateUserCardPackageID(uID, uID);
+            }
         } else {
             log.info("错误码：" + responsePairMap.get("errcode") + "错误信息：" + responsePairMap.get("errmsg"));
             return ResultVO.getInstance(HttpStatus.SC_BAD_REQUEST, "登录失败" + responsePairMap.get("errmsg"), null);
         }
         Map<String, Object> map = new HashMap<>(16);
         map.put("username", openid);
-        log.info("openid为:" + openid);
         map.put("session_key", session_key);
         map.put("created", new Date());
         //如果用户是Merchant，则在map中加入isMerchant

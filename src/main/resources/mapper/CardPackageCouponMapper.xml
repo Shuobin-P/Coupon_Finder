@@ -9,12 +9,13 @@
         VALUES (#{cardPackageID}, #{couponID}, 1)
     </insert>
 
-    <delete id="removeRecord">
-        DELETE
-        FROM card_package_coupon
+    <update id="updateRecordStatus">
+        UPDATE card_package_coupon
+        SET status = #{status}
         WHERE card_package_id = #{cardPackageID}
-          AND coupon_id = #{couponID}
-    </delete>
+            AND coupon_id = #{couponID}
+
+    </update>
 
     <select id="getRecord" resultType="java.lang.Integer">
         SELECT id
