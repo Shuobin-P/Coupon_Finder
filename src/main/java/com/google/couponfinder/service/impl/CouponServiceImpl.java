@@ -69,9 +69,6 @@ public class CouponServiceImpl implements CouponService {
         detailDTO.setStartDate(coupon.getStartDate().getTime());
         detailDTO.setExpireDate(coupon.getExpireDate().getTime());
         log.info(detailDTO.toString());
-        //String startDate = dateUtils.transformMicroSecondsTimestampToDate(detailDTO.getStartDate());
-        //detailDTO.setS
-        //log.info("开始生效时间为：" + startDate);
         detailDTO.setImages(images);
         log.info("发送给前端的优惠券详细信息" + detailDTO);
         return detailDTO;

@@ -16,5 +16,5 @@ public interface CardPackageCouponMapper {
 
     CardPackageCoupon getEntity(Long couponID, Long cardPackageID);
 
-    void removeRecord(Long couponID, Long cardPackageID);
+    void updateRecordStatus(Byte status, Long couponID, Long cardPackageID);
 }

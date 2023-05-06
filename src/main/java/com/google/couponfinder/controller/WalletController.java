@@ -3,6 +3,7 @@ package com.google.couponfinder.controller;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.couponfinder.dto.WalletCouponDTO;
+import com.google.couponfinder.dto.WalletUsedCouponDTO;
 import com.google.couponfinder.entity.Coupon;
 import com.google.couponfinder.service.WalletService;
 import com.google.couponfinder.vo.ResultVO;
@@ -35,6 +36,13 @@ public class WalletController {
         return ResultVO.getInstance("成功获得用户可用优惠券相关信息", page);
     }
 
+    @GetMapping("/getCouponUsedHistory")
+    public ResultVO getCouponUsedHistory(@RequestHeader String Authorization, @RequestParam Integer historyPageNum, Integer pageSize) {
+        PageHelper.startPage(historyPageNum, pageSize);
+        Page<WalletUsedCouponDTO> page = walletService.getCouponUsedHistory(Authorization);
+        return ResultVO.getInstance("成功获得优惠券的历史使用记录", page);
+    }
+
     @GetMapping("/deleteCoupon")
     public ResultVO deleteCoupon(@RequestHeader String Authorization, @RequestParam Long id) {
         return walletService.deleteCoupon(Authorization, id);
@@ -44,4 +52,6 @@ public class WalletController {
     public ResultVO getWalletID(@RequestHeader String Authorization) {
         return walletService.getWalletID(Authorization);
     }
+
+
 }

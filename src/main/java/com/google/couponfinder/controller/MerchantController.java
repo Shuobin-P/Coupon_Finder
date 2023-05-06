@@ -51,11 +51,20 @@ public class MerchantController {
     }
 
     @PostMapping("/commitNewCouponInfo")
-    public ResultVO upload(@RequestBody NewCouponInfoVO couponInfoVO) {
+    public ResultVO upload(@RequestHeader String Authorization, @RequestBody NewCouponInfoVO couponInfoVO) {
         log.info("CouponInfo的信息为：" + couponInfoVO);
         log.info("时间戳：" + couponInfoVO.getStartDate());
         log.info("当前时间：" + dateUtils.transformMicroSecondsTimestampToDate(couponInfoVO.getStartDate()));
         log.info("过期时间：" + dateUtils.transformMicroSecondsTimestampToDate(couponInfoVO.getExpireDate()));
-        return merchantService.releaseNewCoupon(couponInfoVO);
+        return merchantService.releaseNewCoupon(Authorization, couponInfoVO);
+    }
+
+    @GetMapping("/getValidCoupons")
+    public ResultVO getValidCoupons(@RequestHeader String Authorization) {
+        //TODO
+        if (Authorization == null) {
+            return ResultVO.getInstance(400, "用户未登录", null);
+        }
+        return null;
     }
 }
