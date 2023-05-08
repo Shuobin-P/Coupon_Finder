@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/wallet")
 public class WalletController {
-    @Autowired
     private final WalletService walletService;
 
     @Autowired
