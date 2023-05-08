@@ -28,7 +28,7 @@
 
     <select id="getUserID" resultType="Long">
         SELECT id
-        FROM user
+        FROM `user`
         WHERE open_id = #{openID}
     </select>
 </mapper>
