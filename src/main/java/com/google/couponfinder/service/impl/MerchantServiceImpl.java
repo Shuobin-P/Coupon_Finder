@@ -1,5 +1,9 @@
 package com.google.couponfinder.service.impl;
 
+import com.github.pagehelper.Page;
+import com.google.couponfinder.dto.ExpiredCouponDTO;
+import com.google.couponfinder.dto.ReleasedValidCouponDTO;
+import com.google.couponfinder.dto.UpcomingCouponDTO;
 import com.google.couponfinder.entity.Coupon;
 import com.google.couponfinder.mapper.*;
 import com.google.couponfinder.service.MerchantService;
@@ -109,5 +113,28 @@ public class MerchantServiceImpl implements MerchantService {
             goodsDetailImageMapper.addGoodsDetailImage(couponID, newCouponInfoVO.getProductDetailURL()[i]);
         }
         return ResultVO.getInstance("成功提交新优惠券的信息", null);
+    }
+
+    @Override
+    public Page<UpcomingCouponDTO> getUpcomingCoupons(Long merchantID) {
+        Page<UpcomingCouponDTO> list = couponMapper.getUpcomingCoupons(merchantID);
+        return list;
+    }
+
+    @Override
+    public Page<ReleasedValidCouponDTO> getReleasedValidCoupons(Long merchantID) {
+        Page<ReleasedValidCouponDTO> list = couponMapper.getReleasedValidCoupons(merchantID);
+        return list;
+    }
+
+    @Override
+    public Page<ExpiredCouponDTO> getExpiredCoupon(Long merchantID) {
+        Page<ExpiredCouponDTO> list = couponMapper.getExpiredCoupon(merchantID);
+        return list;
+    }
+
+    @Override
+    public void deleteUpcomingCoupon(Long userID, Long couponID) {
+        couponMapper.deleteUpcomingCoupon(userID, couponID);
     }
 }

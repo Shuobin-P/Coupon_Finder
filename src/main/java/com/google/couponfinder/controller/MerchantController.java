@@ -1,8 +1,15 @@
 package com.google.couponfinder.controller;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.google.couponfinder.dto.ExpiredCouponDTO;
+import com.google.couponfinder.dto.ReleasedValidCouponDTO;
+import com.google.couponfinder.dto.UpcomingCouponDTO;
+import com.google.couponfinder.mapper.UserMapper;
 import com.google.couponfinder.service.MerchantService;
 import com.google.couponfinder.util.DateUtils;
 import com.google.couponfinder.util.QiniuUtils;
+import com.google.couponfinder.util.TokenUtils;
 import com.google.couponfinder.vo.NewCouponInfoVO;
 import com.google.couponfinder.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
@@ -25,15 +32,19 @@ import java.io.IOException;
 public class MerchantController {
     private final DateUtils dateUtils;
     private final QiniuUtils qiniuUtils;
+    private final TokenUtils tokenUtils;
+    private final UserMapper userMapper;
     private final MerchantService merchantService;
 
     @Value("${qiniu.path}")
     private String path;
 
     @Autowired
-    public MerchantController(DateUtils dateUtils, QiniuUtils qiniuUtils, MerchantService merchantService) {
+    public MerchantController(DateUtils dateUtils, QiniuUtils qiniuUtils, TokenUtils tokenUtils, UserMapper userMapper, MerchantService merchantService) {
         this.dateUtils = dateUtils;
         this.qiniuUtils = qiniuUtils;
+        this.tokenUtils = tokenUtils;
+        this.userMapper = userMapper;
         this.merchantService = merchantService;
     }
 
@@ -59,12 +70,67 @@ public class MerchantController {
         return merchantService.releaseNewCoupon(Authorization, couponInfoVO);
     }
 
-    @GetMapping("/getValidCoupons")
-    public ResultVO getValidCoupons(@RequestHeader String Authorization) {
-        //TODO
+    /**
+     * 拿到商家发布的，还未生效的优惠券
+     *
+     * @param Authorization
+     * @param upcomingCouponPageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/getUpcomingCoupons")
+    public ResultVO getUpcomingCoupons(@RequestHeader String Authorization, @RequestParam Integer upcomingCouponPageNum, Integer pageSize) {
         if (Authorization == null) {
             return ResultVO.getInstance(400, "用户未登录", null);
         }
-        return null;
+        String openId = tokenUtils.getUsernameByToken(Authorization);
+        PageHelper.startPage(upcomingCouponPageNum, pageSize);
+        Long userID = userMapper.getUserID(openId);
+        Page<UpcomingCouponDTO> list = merchantService.getUpcomingCoupons(userID);
+        return ResultVO.getInstance("成功查询到未开始生效的优惠券信息", list);
     }
+
+    /**
+     * 拿到商家发布且正在生效中的优惠券
+     *
+     * @param Authorization
+     * @return
+     */
+    @GetMapping("/getReleasedValidCoupons")
+    public ResultVO getReleasedValidCoupons(@RequestHeader String Authorization, @RequestParam Integer validCouponPageNum, Integer pageSize) {
+        if (Authorization == null) {
+            return ResultVO.getInstance(400, "用户未登录", null);
+        }
+        //根据Authorization拿到商家的user_id
+        String openId = tokenUtils.getUsernameByToken(Authorization);
+        PageHelper.startPage(validCouponPageNum, pageSize);
+        Long userID = userMapper.getUserID(openId);
+        Page<ReleasedValidCouponDTO> list = merchantService.getReleasedValidCoupons(userID);
+        return ResultVO.getInstance("成功查询到已发布的优惠券信息", list);
+    }
+
+    @GetMapping("/getExpiredCoupon")
+    public ResultVO getExpiredCoupon(@RequestHeader String Authorization, @RequestParam Integer expiredCouponPageNum, Integer pageSize) {
+        if (Authorization == null) {
+            return ResultVO.getInstance(400, "用户未登录", null);
+        }
+        String openId = tokenUtils.getUsernameByToken(Authorization);
+        PageHelper.startPage(expiredCouponPageNum, pageSize);
+        Long userID = userMapper.getUserID(openId);
+        Page<ExpiredCouponDTO> list = merchantService.getExpiredCoupon(userID);
+        return ResultVO.getInstance("成功查询到已过期的优惠券信息", list);
+    }
+
+    @GetMapping("/deleteUpcomingCoupon")
+    public ResultVO deleteUpcomingCoupon(@RequestHeader String Authorization, @RequestParam Integer couponId) {
+        if (Authorization == null) {
+            return ResultVO.getInstance(400, "用户未登录", null);
+        }
+        String openId = tokenUtils.getUsernameByToken(Authorization);
+        //TODO 其实下面这个userID可以做个优化，放在redis里面
+        Long userID = userMapper.getUserID(openId);
+        merchantService.deleteUpcomingCoupon(userID, couponId.longValue());
+        return ResultVO.getInstance("成功删除该未发布的优惠券", null);
+    }
+
 }
