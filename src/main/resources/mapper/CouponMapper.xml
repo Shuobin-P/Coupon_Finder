@@ -18,6 +18,23 @@
         <result property="expireDate" column="expire_date"></result>
     </resultMap>
 
+    <resultMap id="releasedValidCouponDTOMap" type="ReleasedValidCouponDTO">
+        <result property="id" column="id"></result>
+        <result property="title" column="title"></result>
+        <result property="pictureUrl" column="picture_url"></result>
+        <result property="description" column="description"></result>
+        <result property="totalQuantity" column="total_quantity"></result>
+        <result property="usedQuantity" column="used_quantity"></result>
+        <result property="collectedQuantity" column="collected_quantity"></result>
+    </resultMap>
+
+    <resultMap id="expiredCouponDTOMap" type="ExpiredCouponDTO">
+        <result property="id" column="id"></result>
+        <result property="title" column="title"></result>
+        <result property="pictureUrl" column="picture_url"></result>
+        <result property="description" column="description"></result>
+    </resultMap>
+
     <resultMap id="walletCouponDTOMap" type="WalletCouponDTO">
         <result property="id" column="id"></result>
         <result property="title" column="title"></result>
@@ -37,11 +54,20 @@
         <result property="ts" column="ts"></result>
     </resultMap>
 
+    <resultMap id="upcomingCouponDTOMap" type="UpcomingCouponDTO">
+        <result property="id" column="id"></result>
+        <result property="title" column="title"></result>
+        <result property="pictureUrl" column="picture_url"></result>
+        <result property="description" column="description"></result>
+        <result property="startDate" column="start_date"></result>
+    </resultMap>
+
     <insert id="addCoupon" parameterType="Coupon">
         INSERT INTO coupon(title, status, picture_url, description, total_quantity, used_quantity, collected_quantity,
         start_date, expire_date, category_id, original_price, present_price, merchant_id)
         values (#{title}, #{status}, #{pictureUrl}, #{description}, #{totalQuantity}, #{usedQuantity},
-        #{collectedQuantity}, #{startDate}, #{expireDate}, #{categoryId}, #{originalPrice}, #{presentPrice}, #{merchantID})
+        #{collectedQuantity}, #{startDate}, #{expireDate}, #{categoryId}, #{originalPrice}, #{presentPrice},
+        #{merchantID})
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -68,6 +94,13 @@
             WHERE open_id = #{open_id}
         )
           AND coupon_id = #{id}
+    </delete>
+
+    <delete id="deleteUpcomingCoupon">
+        DELETE
+        FROM coupon
+        WHERE merchant_id = #{merchantID}
+          AND id = #{couponID}
     </delete>
 
     <select id="getHotCoupons" resultMap="mainMap">
@@ -114,14 +147,12 @@
             SELECT coupon_id
             FROM card_package_coupon
             WHERE card_package_id = (
-                SELECT id
-                FROM card_package
-                WHERE user_id = (
-                    SELECT id
-                    FROM user
-                    WHERE open_id = #{open_id}
-                )
-            )AND status = 1
+                SELECT card_package_id
+                FROM user
+                WHERE open_id = #{open_id}
+            )
+
+              AND status = 1
         )
     </select>
 
@@ -132,7 +163,7 @@
     </select>
 
     <select id="getCouponUsedHistory" resultMap="walletUsedCouponDTOMap">
-        SELECT id, title, description, picture_url,original_price, present_price, ts
+        SELECT id, title, description, picture_url, original_price, present_price, ts
         FROM (
                  SELECT coupon_id, ts
                  FROM card_package_coupon
@@ -144,9 +175,34 @@
                          FROM user
                          WHERE open_id = #{open_id}
                      )
-                 ) AND status = 2
-                ORDER BY ts DESC) AS tmp
+                 )
+                   AND status = 2
+                 ORDER BY ts DESC) AS tmp
                  LEFT JOIN coupon ON (coupon.id = tmp.coupon_id)
+    </select>
+
+    <select id="getReleasedValidCoupons" resultMap="releasedValidCouponDTOMap">
+        SELECT id, title, description, picture_url, total_quantity, used_quantity, collected_quantity
+        FROM coupon
+        WHERE merchant_id = #{merchantID}
+          AND now() BETWEEN start_date AND expire_date
+        ORDER BY release_ts DESC
+    </select>
+
+    <select id="getExpiredCoupon" resultMap="expiredCouponDTOMap">
+        SELECT id, title, description, picture_url
+        FROM coupon
+        WHERE merchant_id = #{merchantID}
+          AND now() > expire_date
+        ORDER BY expire_date DESC
+    </select>
+
+    <select id="getUpcomingCoupons" resultMap="upcomingCouponDTOMap">
+        SELECT id, title, description, picture_url, start_date
+        FROM coupon
+        WHERE merchant_id = #{merchantID}
+          AND start_date > now()
+        ORDER BY start_date
     </select>
 
 </mapper>

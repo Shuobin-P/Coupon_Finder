@@ -1,8 +1,7 @@
 package com.google.couponfinder.mapper;
 
 import com.github.pagehelper.Page;
-import com.google.couponfinder.dto.WalletCouponDTO;
-import com.google.couponfinder.dto.WalletUsedCouponDTO;
+import com.google.couponfinder.dto.*;
 import com.google.couponfinder.entity.Coupon;
 import com.google.couponfinder.vo.NewCouponInfoVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -43,6 +42,7 @@ public interface CouponMapper {
 
     /**
      * 优惠券使用记录
+     *
      * @param open_id
      * @return
      */
@@ -56,4 +56,11 @@ public interface CouponMapper {
 
     Page<Coupon> findCoupon(String queryInfo);
 
+    Page<ReleasedValidCouponDTO> getReleasedValidCoupons(Long merchantID);
+
+    Page<ExpiredCouponDTO> getExpiredCoupon(Long merchantID);
+
+    Page<UpcomingCouponDTO> getUpcomingCoupons(Long merchantID);
+
+    void deleteUpcomingCoupon(Long merchantID, Long couponID);
 }
