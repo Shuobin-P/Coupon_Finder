@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -98,6 +99,7 @@ public class MerchantServiceImpl implements MerchantService {
         targetCoupon.setOriginalPrice(newCouponInfoVO.getOriginalPrice().doubleValue());
         targetCoupon.setPresentPrice(newCouponInfoVO.getPresentPrice().doubleValue());
         targetCoupon.setMerchantID(userMapper.getUserID(tokenUtils.getUsernameByToken(jwt)));
+        targetCoupon.setReleaseTs(new Date(System.currentTimeMillis()));
         //下面这个返回值有问题，不应该是1的
         Long couponID = -1L;
         if (couponMapper.addCoupon(targetCoupon) > 0) {

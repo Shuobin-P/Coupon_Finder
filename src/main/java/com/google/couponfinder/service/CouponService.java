@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface CouponService {
     /**
-     * 获得使用数量最多的优惠券的相关信息，并且按照从高到低的顺序排列
+     * 获得使用数量最多的饮品优惠券的相关信息，并且按照从高到低的顺序排列
      *
      * @return
      */

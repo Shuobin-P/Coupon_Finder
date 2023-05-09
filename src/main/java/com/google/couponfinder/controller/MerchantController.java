@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.google.couponfinder.dto.ExpiredCouponDTO;
 import com.google.couponfinder.dto.ReleasedValidCouponDTO;
 import com.google.couponfinder.dto.UpcomingCouponDTO;
+import com.google.couponfinder.mapper.CouponMapper;
 import com.google.couponfinder.mapper.UserMapper;
 import com.google.couponfinder.service.MerchantService;
 import com.google.couponfinder.util.DateUtils;
@@ -34,19 +35,22 @@ public class MerchantController {
     private final QiniuUtils qiniuUtils;
     private final TokenUtils tokenUtils;
     private final UserMapper userMapper;
+    private final CouponMapper couponMapper;
     private final MerchantService merchantService;
 
     @Value("${qiniu.path}")
     private String path;
 
     @Autowired
-    public MerchantController(DateUtils dateUtils, QiniuUtils qiniuUtils, TokenUtils tokenUtils, UserMapper userMapper, MerchantService merchantService) {
+    public MerchantController(DateUtils dateUtils, QiniuUtils qiniuUtils, TokenUtils tokenUtils, UserMapper userMapper, CouponMapper couponMapper, MerchantService merchantService) {
         this.dateUtils = dateUtils;
         this.qiniuUtils = qiniuUtils;
         this.tokenUtils = tokenUtils;
         this.userMapper = userMapper;
+        this.couponMapper = couponMapper;
         this.merchantService = merchantService;
     }
+
 
     @GetMapping("/verify")
     public ResultVO verify(@RequestParam String key, @RequestHeader String Authorization) {
@@ -131,6 +135,23 @@ public class MerchantController {
         Long userID = userMapper.getUserID(openId);
         merchantService.deleteUpcomingCoupon(userID, couponId.longValue());
         return ResultVO.getInstance("成功删除该未发布的优惠券", null);
+    }
+
+    /**
+     * 下架某已发布的优惠券
+     * @param Authorization
+     * @param couponId
+     * @return
+     */
+    @GetMapping("/stopValidCoupon")
+    public ResultVO stopValidCoupon(@RequestHeader String Authorization, @RequestParam Integer couponId) {
+        if (Authorization == null) {
+            return ResultVO.getInstance(400, "用户未登录", null);
+        }
+        String openId = tokenUtils.getUsernameByToken(Authorization);
+        Long userID = userMapper.getUserID(openId);
+        couponMapper.stopValidCoupon(userID, couponId.longValue());
+        return ResultVO.getInstance("成功删除该优惠券", null);
     }
 
 }

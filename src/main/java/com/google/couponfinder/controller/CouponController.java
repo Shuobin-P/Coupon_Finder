@@ -4,9 +4,12 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.couponfinder.entity.CardPackageCoupon;
 import com.google.couponfinder.entity.Coupon;
+import com.google.couponfinder.mapper.CouponMapper;
+import com.google.couponfinder.mapper.UserMapper;
 import com.google.couponfinder.service.CouponService;
 import com.google.couponfinder.service.WalletService;
 import com.google.couponfinder.util.QRCodeUtil;
+import com.google.couponfinder.util.TokenUtils;
 import com.google.couponfinder.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +30,17 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/coupon")
 public class CouponController {
-
+    private final UserMapper userMapper;
+    private final TokenUtils tokenUtils;
+    private final CouponMapper couponMapper;
     private final CouponService couponService;
     private final WalletService walletService;
 
-
     @Autowired
-    public CouponController(CouponService couponService, WalletService walletService) {
+    public CouponController(UserMapper userMapper, TokenUtils tokenUtils, CouponMapper couponMapper, CouponService couponService, WalletService walletService) {
+        this.userMapper = userMapper;
+        this.tokenUtils = tokenUtils;
+        this.couponMapper = couponMapper;
         this.couponService = couponService;
         this.walletService = walletService;
     }
@@ -121,11 +128,17 @@ public class CouponController {
     }
 
     @GetMapping("/useCoupon")
-    public ResultVO useCoupon(@RequestParam Long coupon_id, Long wallet_id) {
+    public ResultVO useCoupon(@RequestHeader String Authorization, @RequestParam Long coupon_id, Long wallet_id) {
         //验证请求是否是商家发出的，然后检查coupon_id和wallet_id是否合法
         //注意：可以使用微信开发者的多账户调试，然后开始真机调试模拟商家扫描用户出示的优惠券二维码操作。
         log.info("coupon_id为" + coupon_id);
         log.info("wallet_id为" + wallet_id);
+        //判断该优惠券是否是该商家发布的
+        Long merchantID = userMapper.getUserID(tokenUtils.getUsernameByToken(Authorization));
+        if(!merchantID.equals(couponMapper.getReleasedCouponMerchantID(coupon_id))) {
+            return ResultVO.getInstance(2, "该优惠券不是商家发布的", null);
+        }
+
         CardPackageCoupon cardPackageCoupon = walletService.getRecord(wallet_id, coupon_id);
         Byte status = cardPackageCoupon.getStatus();
         if (status == 1) {

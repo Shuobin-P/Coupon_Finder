@@ -2,6 +2,9 @@ package com.google.couponfinder.entity;
 
 import lombok.Data;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 @Data
 public class Coupon {
 
@@ -19,6 +22,7 @@ public class Coupon {
     private Double originalPrice;
     private Double presentPrice;
     private Long merchantID;
+    private Date releaseTs;
 
 
 }
