@@ -11,6 +11,7 @@ import lombok.Data;
 public class ReleasedValidCouponDTO {
     private Long id;
     private String title;
+    private Integer status;
     private String description;
     private String pictureUrl;
     private Long totalQuantity;
