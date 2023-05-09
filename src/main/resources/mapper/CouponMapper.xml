@@ -64,10 +64,10 @@
 
     <insert id="addCoupon" parameterType="Coupon">
         INSERT INTO coupon(title, status, picture_url, description, total_quantity, used_quantity, collected_quantity,
-        start_date, expire_date, category_id, original_price, present_price, merchant_id)
+        start_date, expire_date, category_id, original_price, present_price, merchant_id, release_ts)
         values (#{title}, #{status}, #{pictureUrl}, #{description}, #{totalQuantity}, #{usedQuantity},
         #{collectedQuantity}, #{startDate}, #{expireDate}, #{categoryId}, #{originalPrice}, #{presentPrice},
-        #{merchantID})
+        #{merchantID}, #{releaseTs})
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -103,11 +103,19 @@
           AND id = #{couponID}
     </delete>
 
+    <update id="stopValidCoupon">
+        UPDATE coupon
+        SET status = 3
+        WHERE merchant_id = #{merchantID}
+          AND id = #{couponID}
+    </update>
+
     <select id="getHotCoupons" resultMap="mainMap">
         SELECT *
         FROM coupon
         WHERE category_id = 2
           AND total_quantity - used_quantity - collected_quantity > 0
+          AND now() BETWEEN start_date AND expire_date
         ORDER BY used_quantity DESC
     </select>
 
@@ -116,6 +124,7 @@
         FROM coupon
         WHERE category_id = 1
           AND total_quantity - used_quantity - collected_quantity > 0
+          AND now() BETWEEN start_date AND expire_date
         ORDER BY used_quantity DESC
     </select>
 
@@ -124,6 +133,8 @@
         FROM coupon
         WHERE category_id = 3
           AND total_quantity - used_quantity - collected_quantity > 0
+          AND now() BETWEEN start_date AND expire_date
+          AND status != 3
         ORDER BY used_quantity DESC
     </select>
 
@@ -168,16 +179,12 @@
                  SELECT coupon_id, ts
                  FROM card_package_coupon
                  WHERE card_package_id = (
-                     SELECT id
-                     FROM card_package
-                     WHERE user_id = (
-                         SELECT id
-                         FROM user
-                         WHERE open_id = #{open_id}
-                     )
-                 )
-                   AND status = 2
-                 ORDER BY ts DESC) AS tmp
+                     SELECT card_package_id
+                     FROM user
+                     WHERE open_id = #{open_id}
+                 ) AND status = 2
+                 ORDER BY ts DESC
+             ) AS tmp
                  LEFT JOIN coupon ON (coupon.id = tmp.coupon_id)
     </select>
 
@@ -203,6 +210,12 @@
         WHERE merchant_id = #{merchantID}
           AND start_date > now()
         ORDER BY start_date
+    </select>
+
+    <select id="getReleasedCouponMerchantID" resultType="java.lang.Long">
+        SELECT merchant_id
+        FROM coupon
+        WHERE id = #{couponID}
     </select>
 
 </mapper>
