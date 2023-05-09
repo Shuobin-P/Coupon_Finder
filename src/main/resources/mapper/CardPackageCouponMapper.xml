@@ -11,7 +11,7 @@
 
     <update id="updateRecordStatus">
         UPDATE card_package_coupon
-        SET status = #{status}
+        SET status = #{status}, ts = now()
         WHERE card_package_id = #{cardPackageID}
             AND coupon_id = #{couponID}
 
