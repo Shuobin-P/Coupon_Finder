@@ -63,4 +63,8 @@ public interface CouponMapper {
     Page<UpcomingCouponDTO> getUpcomingCoupons(Long merchantID);
 
     void deleteUpcomingCoupon(Long merchantID, Long couponID);
+
+    void stopValidCoupon(Long merchantID, Long couponID);
+
+    Long getReleasedCouponMerchantID(Long couponID);
 }
