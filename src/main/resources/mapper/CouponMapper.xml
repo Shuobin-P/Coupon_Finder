@@ -43,6 +43,7 @@
         <result property="description" column="description"></result>
         <result property="originalPrice" column="original_price"></result>
         <result property="presentPrice" column="present_price"></result>
+        <result property="expireDate" column="expire_date"></result>
     </resultMap>
 
     <resultMap id="walletUsedCouponDTOMap" type="WalletUsedCouponDTO">
@@ -153,7 +154,7 @@
 
     <select id="getAvailableCoupons" resultMap="walletCouponDTOMap"
             parameterType="String">
-        SELECT id, title, description, picture_url, original_price, present_price
+        SELECT id, title, description, picture_url, original_price, present_price, expire_date
         FROM coupon
         WHERE id IN (
             SELECT coupon_id

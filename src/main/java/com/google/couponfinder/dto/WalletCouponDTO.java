@@ -2,6 +2,10 @@ package com.google.couponfinder.dto;
 
 import lombok.Data;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
+
 /**
  * @author W&F
  * @version 1.0
@@ -15,6 +19,5 @@ public class WalletCouponDTO {
     private String pictureUrl;
     private String originalPrice;
     private String presentPrice;
-
-
+    private Date expireDate;
 }
