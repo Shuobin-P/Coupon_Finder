@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface WalletService {
     Page<WalletCouponDTO> getAvailableCoupons(String jwt);
+
     Page<WalletUsedCouponDTO> getCouponUsedHistory(String jwt);
 
     ResultVO deleteCoupon(String jwt, Long id);
