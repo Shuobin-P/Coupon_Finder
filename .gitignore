@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Coupon_Finder
+src/main/resources/9876332_shuobin.tech.jks
+src/main/resources/application.yml
+src/main/resources/jks-password.txt
