@@ -32,9 +32,9 @@ qiniu:
   bucketName: coupon-finder-images-backup1
   path: rtxlr46aj.hn-bkt.clouddn.com
 
-#server:
-#    port: 443
-#    ssl:
-#      key-store-password: mdex375t    #填写pfx-password.txt文件内的密码。
-#      key-store-type: JKS
-#      key-store: classpath:9876332_shuobin.tech.jks    #您需要使用实际的证书名称替换domain_name.pfx。
+server:
+    port: 443
+    ssl:
+      key-store-password: mdex375t    #填写pfx-password.txt文件内的密码。
+      key-store-type: JKS
+      key-store: classpath:9876332_shuobin.tech.jks    #您需要使用实际的证书名称替换domain_name.pfx。
